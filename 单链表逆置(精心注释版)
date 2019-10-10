@@ -1,0 +1,104 @@
+```
+#include <stdio.h>  
+#include <stdlib.h>  
+
+typedef struct node {
+	int data;
+	struct node *next;
+}Node;
+
+//将输入值转化为链表
+Node *CreatList(void)
+{
+	
+	Node *head, *p, *q;
+
+	q = head = (Node *)malloc(sizeof(Node));
+	printf("请输入您要输入的数据:\n");
+	while (1)
+	{
+		char val;
+		scanf_s("%c", &val);
+		if (val == '\n')
+		{
+			break;
+		}
+		//p用来获取提供一个新节点,q是一个不断后移的工作指针.
+		p = (Node *)malloc(sizeof(Node));
+		p->data = val;
+		
+		//接下来开始不断进行连接,不断的让q指向新的p
+		q->next = p;
+		//q=p这一句一开始理解有点绕.
+		//我的理解是q跑去换了一个新的地址和新的值,你再去改动p地址的值,就是改动q的值,并且!q原地址的值是不变的
+		//这种思想的意思是,如果你想不改变q所在地址上的值,并且让它在p地址上发挥作用,那么你可以让q = p;
+		q = p;
+
+
+	}
+	//单链表的最后记得要指向NULL,.
+	//tip:这里你写p->next = NULL也可以
+	q->next = NULL;
+
+	//这里不返回head是因为head的第一个节点值是个野值,从第二个才开始有意义
+	return (head->next);
+}
+
+
+/*链表的逆置  (头接法)
+	总体思路: 构建一个r,作为反转链表的头结点,然后pq负责不断地将新节点指向r
+	用q记录下一个节点,然后当前结点断开与其的连接,去接另一个节点
+	道理就类似于就像你得先分手,然后再去找新的对象*/
+Node *ReverseList(Node *head)
+{
+	Node *p, *q, *r;
+
+	p = head;
+	q = r = NULL;
+
+	while (p)
+	{	//q是p指向的下一个
+		q = p->next;
+		//然后把p的下一个连到r前面                      
+		p->next = r;              // 注意这里千万不能写成q=r!!!!!   因为你不能让你的前任去指向你的下一任啊(雾
+		//然后让r跑回到链表的头部
+		r = p;
+		//让p跑到原链中下一结点
+		p = q;
+	}
+	return r;
+}
+
+
+//套路化的输出链表
+void ShowList(Node *phead)
+{
+	Node *p;
+
+	p = phead;
+	while (p)
+	{
+		printf("%c ", p->data);
+		p = p->next;
+	}
+	printf("\n");
+}
+
+
+int main(void)
+{
+	Node *head;
+	//创建链表
+	head = CreatList();
+	//查看逆置前
+	printf("链表逆置前的数据:\n");
+	ShowList(head);
+	//逆置
+	head = ReverseList(head);
+	//查看逆置后
+	printf("链表逆置后的数据:\n");
+	ShowList(head);
+
+	return 0;
+}
+```
